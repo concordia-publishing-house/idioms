@@ -1,29 +1,17 @@
 # Idioms
 
-TODO: Write a gem description
+Our team's extensions to the Ruby Language and to Active Support
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'idioms'
+    gem "idioms", github: "concordia-publishing-house/idioms", branch: "master"
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
+You may also want to run if you want to hack in Idioms:
 
-    $ gem install idioms
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/idioms/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+    $ bundle config local.idioms ~/Code/idioms
