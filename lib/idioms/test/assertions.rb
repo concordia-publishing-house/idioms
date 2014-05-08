@@ -11,11 +11,11 @@ module Idioms
         flunk "#{$!.class} was raised\n#{$!.message}\n#{$!.backtrace.join("\n")}"
       end
       
-      def assert_valid(record, message)
+      def assert_valid(record, message=nil)
         assert record.valid?, message || "You expected #{record.class.name.downcase} to be valid, but it wasn't"
       end
       
-      def refute_valid(record, message)
+      def refute_valid(record, message=nil)
         refute record.valid?, message || "You expected #{record.class.name.downcase} to be **invalid**, but it wasn't"
       end
       
