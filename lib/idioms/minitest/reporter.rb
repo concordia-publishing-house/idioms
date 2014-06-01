@@ -23,7 +23,7 @@ module Idioms
       def report
         super
         puts "Finished in %.5fs" % total_time
-        print "\e[37;1m%d tests\e[0m" % count
+        print "\e[37m%d tests\e[0m" % count
         print ", "
         print_with_color :green, "%d passed", passes
         print ", "
@@ -47,6 +47,18 @@ module Idioms
         if !test.skipped? && test.failure
           print_info(test.failure)
           puts
+        end
+      end
+      
+      def print_colored_status(test)
+        if test.passed?
+          print(green { pad_mark( result(test).to_s.upcase ) })
+        elsif test.skipped?
+          print(cyan { pad_mark( result(test).to_s.upcase ) })
+        elsif test.error?
+          print(yellow { pad_mark( result(test).to_s.upcase ) })
+        else
+          print(red { pad_mark( result(test).to_s.upcase ) })
         end
       end
 
