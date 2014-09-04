@@ -13,7 +13,7 @@ module Rack
 
     def invalid_params!(env, error)
       raise error unless env["CONTENT_TYPE"] =~ /application\/json/
-      [ 
+      [
         400,
         { "Content-Type" => "application/json" },
         [{ status: 400, error: "There was a problem in the JSON you submitted: #{error}" }.to_json]
