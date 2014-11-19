@@ -12,7 +12,7 @@ module Idioms
           # mimic the behavior that we get with proxy requests with HTTPS
           raise ::Faraday::Error::ConnectionFailed, %{407 "Proxy Authentication Required "}
         when 400..599
-          error = Idioms::HTTP::ERRORS.fetch(status, :UnrecognizedResponse)
+          error = Idioms::HTTP::ERRORS.fetch(env[:status], :UnrecognizedResponse)
           exception = Idioms::HTTP.const_get error
           raise exception.new(env)
         end
