@@ -5,3 +5,4 @@ require "idioms/core_ext/array"
 require "idioms/core_ext/date"
 require "idioms/core_ext/time"
 require "idioms/faraday/raise_errors" if defined?(Faraday)
+require "idioms/null_object"
