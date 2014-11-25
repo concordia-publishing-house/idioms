@@ -30,7 +30,7 @@ module Idioms
       422 => :UnprocessableEntity }.freeze
     
     SERVER_ERRORS = {
-      500 => :ServerError,
+      500 => :InternalError,
       502 => :BadGateway,
       503 => :ServiceUnavailable,
       504 => :GatewayTimeout }.freeze
