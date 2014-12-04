@@ -9,7 +9,11 @@ class Date
   module ParseWithError
 
     def parse!(*args)
-      parse(*args)
+      time = parse(*args)
+      if time && time.year > 294276
+        raise Idioms::InvalidDate, "Years larger than 294276 are not supported by Postgres timestamps"
+      end
+      time
     rescue ArgumentError
       raise Idioms::InvalidDate, $!.message
     end
@@ -23,7 +27,11 @@ class DateTime
   module ParseWithError
 
     def parse!(*args)
-      parse(*args)
+      time = parse(*args)
+      if time && time.year > 294276
+        raise Idioms::InvalidDate, "Years larger than 294276 are not supported by Postgres timestamps"
+      end
+      time
     rescue ArgumentError
       raise Idioms::InvalidDateTime, $!.message
     end
