@@ -10,9 +10,11 @@ module Rack
     rescue *parse_errors => error
       invalid_params!(env, error)
     rescue EOFError
-      invalid_multipart!(env, error)
+      invalid_multipart!(env, $!)
     rescue TypeError
-      invalid_hash_params!(env, error)
+      invalid_hash_params!(env, $!)
+    rescue Hash::DisallowedType
+      invalid_xml_request!(env, $!)
     end
 
     def invalid_params!(env, error)
@@ -25,13 +27,18 @@ module Rack
     end
     
     def invalid_multipart!(env, error)
-      raise $! unless env["CONTENT_TYPE"] =~ /multipart\/form-data/ && env["REQUEST_METHOD"] == "GET"
-      [400, {}, "400 Bad Request: Invalid multipart/form-data request"]
+      raise error unless env["CONTENT_TYPE"] =~ /multipart\/form-data/ && env["REQUEST_METHOD"] == "GET"
+      bad_request("400 Bad Request: Invalid multipart/form-data request")
     end
     
     def invalid_hash_params!(env, error)
-      raise $! unless $!.to_s =~ /expected [\w:]+ \(.+\) for param/i
-      [400, {}, ["400 Bad Request"]]
+      raise error unless error.to_s =~ /expected [\w:]+ \(.+\) for param/i
+      bad_request
+    end
+    
+    def invalid_xml_request!(env, error)
+      raise error unless error.to_s =~ /Disallowed type attribute: "yaml"/
+      bad_request
     end
 
     def parse_errors
@@ -49,6 +56,10 @@ module Rack
         scope = scope.const_get(constant)
       end
       true
+    end
+    
+    def bad_request(message="400 Bad Request")
+      [400, {}, [message]]
     end
 
   end
