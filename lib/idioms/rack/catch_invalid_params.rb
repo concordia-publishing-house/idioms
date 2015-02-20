@@ -11,9 +11,11 @@ module Rack
       invalid_params!(env, error)
     rescue EOFError
       invalid_multipart!(env, $!)
-    rescue TypeError
+    rescue *invalid_hash_errors
       invalid_hash_params!(env, $!)
-    rescue Hash::DisallowedType
+    rescue StandardError
+      # Hash::DisallowedType doesn't exist in Rails 4
+      raise $! unless $!.class.to_s == "Hash::DisallowedType"
       invalid_xml_request!(env, $!)
     end
 
@@ -46,6 +48,12 @@ module Rack
       exceptions.push(MultiJson::LoadError) if _defined? "MultiJson::LoadError"
       exceptions.push(MultiJson::ParseError) if _defined? "MultiJson::ParseError"
       exceptions.push(ActionDispatch::ParamsParser::ParseError) if _defined? "ActionDispatch::ParamsParser::ParseError"
+      exceptions
+    end
+    
+    def invalid_hash_errors
+      exceptions = [TypeError]
+      exceptions << ActionController::BadRequest if defined?(ActionController::BadRequest)
       exceptions
     end
 
