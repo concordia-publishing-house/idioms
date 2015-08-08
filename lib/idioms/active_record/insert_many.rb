@@ -1,13 +1,11 @@
 module InsertMany
-
   def insert_many(fixtures)
     connection.insert_many(fixtures, table_name)
   end
 end
 
 module InsertManyStatement
-
-  def insert_many(fixtures, table_name)
+  def insert_many(fixtures, table_name=self.table_name)
     return if fixtures.empty?
 
     columns = schema_cache.columns_hash(table_name)
@@ -21,13 +19,8 @@ module InsertManyStatement
       end
     end
 
-    values = value_lists.map do |value|
-      "(#{value.join(', ')})"
-    end.join(",")
-
-    execute "INSERT INTO #{quote_table_name(table_name)} (#{key_list.join(', ')}) VALUES #{values}", 'Fixture Insert'
+    execute "INSERT INTO #{quote_table_name(table_name)} (#{key_list.join(', ')}) VALUES #{value_lists.map { |value| "(#{value.join(', ')})" }.join(",")}", "Fixture Insert"
   end
-
 end
 
 ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.send :include, InsertManyStatement
