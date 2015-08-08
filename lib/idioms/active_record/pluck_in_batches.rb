@@ -1,13 +1,22 @@
 module PluckInBatches
   def pluck_in_batches(*args, &block)
     options = args.extract_options!
-    batch_size = options.fetch(:batch_size, 500)
-    batches = (count / batch_size.to_f).ceil
-    query = reorder(:id)
-  
-    batches.times do |i|
-      query.limit(batch_size).offset(i * batch_size).pluck(*args).each(&block)
+    in_batches(options) do |batch|
+      batch.pluck(*args).each(&block)
     end
+  end
+  
+  def in_batches(options = {})
+    options.assert_valid_keys(:batch_size)
+
+    batch_size = options[:batch_size] || 1000
+    batches = (count / batch_size.to_f).ceil
+
+    relation = reorder("#{quoted_table_name}.#{quoted_primary_key} ASC").limit(batch_size)
+    batches.times do |i|
+      yield relation.offset(i * batch_size)
+    end
+
     nil
   end
 end
