@@ -12,6 +12,8 @@ class Date
       time = parse(*args)
       if time && time.year > 294276
         raise Idioms::InvalidDate, "Years larger than 294276 are not supported by Postgres timestamps"
+      elsif time && time.year <= 0
+        raise Idioms::InvalidDate, "Years smaller than 1 are not supported by Postgres timestamps"
       end
       time
     rescue ArgumentError
