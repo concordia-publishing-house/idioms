@@ -27,17 +27,17 @@ module Rack
         [{ status: 400, error: "There was a problem in the JSON you submitted: #{error}" }.to_json]
       ]
     end
-    
+
     def invalid_multipart!(env, error)
       raise error unless env["CONTENT_TYPE"] =~ /multipart\/form-data/ && env["REQUEST_METHOD"] == "GET"
       bad_request("400 Bad Request: Invalid multipart/form-data request")
     end
-    
+
     def invalid_hash_params!(env, error)
       raise error unless error.to_s =~ /expected [\w:]+ \(.+\) for param/i
       bad_request
     end
-    
+
     def invalid_xml_request!(env, error)
       raise error unless error.to_s =~ /Disallowed type attribute: "yaml"/
       bad_request
@@ -50,7 +50,7 @@ module Rack
       exceptions.push(ActionDispatch::ParamsParser::ParseError) if _defined? "ActionDispatch::ParamsParser::ParseError"
       exceptions
     end
-    
+
     def invalid_hash_errors
       exceptions = [TypeError]
       exceptions << ActionController::BadRequest if defined?(ActionController::BadRequest)
@@ -65,7 +65,7 @@ module Rack
       end
       true
     end
-    
+
     def bad_request(message="400 Bad Request")
       [400, {}, [message]]
     end
