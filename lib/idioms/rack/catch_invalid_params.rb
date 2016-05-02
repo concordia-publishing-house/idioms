@@ -13,6 +13,8 @@ module Rack
       invalid_multipart!(env, $!)
     rescue *invalid_hash_errors
       invalid_hash_params!(env, $!)
+    rescue ArgumentError
+      invalid_arguments!(env, $!)
     rescue StandardError
       # Hash::DisallowedType doesn't exist in Rails 4
       raise $! unless $!.class.to_s == "Hash::DisallowedType"
@@ -35,6 +37,11 @@ module Rack
 
     def invalid_hash_params!(env, error)
       raise error unless error.to_s =~ /expected [\w:]+ \(.+\) for param/i
+      bad_request
+    end
+
+    def invalid_arguments!(env, error)
+      raise error unless error.to_s =~ /invalid %-encoding/i
       bad_request
     end
 
