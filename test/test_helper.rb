@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "idioms"
 
-require "minitest/reporters/turn_reporter"
+require "minitest-reporters-turn_reporter"
 MiniTest::Reporters.use! Minitest::Reporters::TurnReporter.new
 
 require "shoulda/context"
