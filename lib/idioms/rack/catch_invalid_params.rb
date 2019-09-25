@@ -55,6 +55,7 @@ module Rack
       exceptions.push(MultiJson::LoadError) if _defined? "MultiJson::LoadError"
       exceptions.push(MultiJson::ParseError) if _defined? "MultiJson::ParseError"
       exceptions.push(ActionDispatch::ParamsParser::ParseError) if _defined? "ActionDispatch::ParamsParser::ParseError"
+      exceptions.push(ActionDispatch::Http::Parameters::ParseError) if _defined? "ActionDispatch::Http::Parameters::ParseError"
       exceptions
     end
 
